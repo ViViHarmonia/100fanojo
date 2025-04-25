@@ -1,6 +1,12 @@
 import { ref } from "vue";
 export const girlfriends = [
   {
+    url: "/big headshots/HeadshotRentarou.png",
+    num: "0",
+    char: "ren",
+    name: "Aijou Rentarou",
+  },
+  {
     url: "/big headshots/HeadshotHakari.png",
     num: "1",
     char: "haka",
@@ -25,7 +31,7 @@ export const girlfriends = [
     name: "Eiai Nano",
   },
   {
-    url: "/big headshots/HeadshotKusuri.png",
+    url: "/big headshots/HeadshotKusuriGif.gif",
     num: "5",
     char: "kusu",
     name: "Yakuzen Kusuri",

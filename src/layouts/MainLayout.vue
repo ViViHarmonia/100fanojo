@@ -29,13 +29,13 @@
       <q-scroll-area style="height: 500px; max-width: 300px;" v-if="search == 1">
         <div class="q-py-xs">
           <div class="row justify-center q-pa-xs" v-for="tag in sections">
-            <q-btn style="width: 90%" color="pink-4">{{ tag.label }}</q-btn>
+            <q-btn style="width: 90%" color="pink-4" :to="`/media/${tag.tag}`">{{ tag.label }}</q-btn>
           </div>
         </div>
       </q-scroll-area>
       <q-scroll-area style="height: 500px; max-width: 300px;" v-if="search == 2">
         <div class="row flex-center q-py-xs">
-          <q-btn v-for="(char, c) in girlfriends" square padding="xs" flat>
+          <q-btn v-for="(char, c) in girlfriends" square padding="xs" flat :to="`/character/${char.char}`">
             <q-avatar rounded size="60px">
               <img :src="char.url" :title="char.name">
             </q-avatar>
@@ -44,7 +44,7 @@
       </q-scroll-area>
       <div class="row q-px-md q-pt-md justify-center ">Credits:
       </div>
-      <div class="row q-px-md justify-center ">Kitty - Image Collection</div>
+      <div class="row q-px-md justify-center ">Kitty - Image Collection, Boss</div>
       <div class="row q-px-md justify-center ">Lilith - Data Gathering</div>
       <div class="row q-px-md justify-center ">ViViHarmonia - Webpage</div>
       <div class="row q-px-md justify-center ">Microphony - Assets</div>
@@ -59,8 +59,6 @@
 <script setup>
 import { ref } from 'vue'
 import { sections } from 'src/composables/groups'
-import { galeria } from 'src/composables/gallery'
-import { otherArtists } from 'src/composables/groups'
 import { girlfriends } from 'src/composables/girlfriends'
 const search = ref(1)
 
@@ -70,3 +68,14 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 </script>
+<style>
+body {
+  background-color: #fdf2ea;
+  background-image: url("/bg/ph.png"), url("/bg/ph.png");
+  background-size: 75px;
+  background-repeat: repeat, repeat;
+  background-position-x: center, 23px;
+  background-position-y: center, 70px;
+
+}
+</style>

@@ -9,6 +9,7 @@ export const sections = [
   { label: "Promo Art", tag: "promo" },
   { label: "B-Day Art", tag: "bday" },
   { label: "Black & White", tag: "bw" },
+  { label: "Light Novel", tag: "light" },
   { label: "Bonus Art", tag: "bonus" },
   { label: "Chibis", tag: "chibi" },
   {
