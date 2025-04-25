@@ -1,15 +1,23 @@
 <template>
-  <h3>Welcome to the 100 Kanojo Art Museum</h3>
-  <p>An attempt to collect all official artwork for 100 Kanojo in one place.
-    Contact: @meidomai on Discord
-    Please message me if you know of art that's missing, if interested in translating a piece or if you see a
-    translation floating around, or if you have a higher quality version of a piece.</p>
+  <div class="row q-pa-md">ESCRITURA DE PRUEBA</div>
 </template>
 <script setup>
 import { onMounted, ref, toRef, watch } from "vue";
 import { galeria } from 'src/composables/gallery'
+import { otherArtists } from 'src/composables/groups'
+import { girlfriends } from 'src/composables/girlfriends'
 
 
 
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss">
+body {
+  background-color: #fdf2ea;
+  background-image: url("/bg/ph.png"), url("/bg/ph.png");
+  background-size: 75px;
+  background-repeat: repeat, repeat;
+  background-position-x: center, 23px;
+  background-position-y: center, 70px;
+
+}
+</style>

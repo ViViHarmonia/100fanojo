@@ -1,2 +1,2 @@
 import { ref } from "vue";
-export const galeria = [{ url: "/pics/", tags: "", chars: "" }];
+export const galeria = [{ url: "/pics/", label: "", tags: "", chars: "" }];
