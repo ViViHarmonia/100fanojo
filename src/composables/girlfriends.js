@@ -198,5 +198,5 @@ export const girlfriends = [
     char: "hasu",
     name: "Hasu Hasuha",
   },
-  //{ url: "/big headshots/Headshot--.png", num: "33", chars: "Morikita Kimari" },
+  //{ url: "/big headshots/Headshot--.png", num: "33", char: "mari", name: "Morikita Kimari" },
 ];
