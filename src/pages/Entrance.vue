@@ -17,21 +17,44 @@
           <q-separator inset color="white" />
           <div class="text-subtitle1 text-center q-px-xs strokeme">Choose by Media or Character
           </div>
-          <div class="row justify-center">
-            <div class="col-md-2 q-pa-xs justify-center" v-for="tag in sections">
-              <q-btn style="width: 100%" size="sm" color="pink-4" :to="`/media/${tag.tag}`">{{ tag.label }}</q-btn>
+          <div v-if="$q.screen.lt.md">
+            <div class="row justify-center q-pa-xs">
+              <q-btn-group spread>
+                <q-btn color="pink" label="Media" @click="modeswitch = 1" />
+                <q-btn color="pink" label="Character" @click="modeswitch = 2" />
+              </q-btn-group>
+            </div>
+            <div class="row justify-center  q-pa-xs" v-if="modeswitch == 1">
+              <div class="col-md-2 q-pa-xs justify-center" v-for="tag in sections">
+                <q-btn style="width: 100%" size="sm" color="pink-4" :to="`/media/${tag.tag}`">{{ tag.label }}</q-btn>
+              </div>
+            </div>
+            <div class="row justify-center q-pa-xs" v-if="modeswitch == 2">
+              <q-btn v-for="(char, c) in girlfriends" square padding="none" flat :to="`/character/${char.char}`">
+                <q-avatar rounded size="50px">
+                  <img :src="char.url" :title="char.name">
+                </q-avatar>
+              </q-btn>
             </div>
           </div>
-          <div class="row justify-center q-py-sm" style="color: white; font-size: 30px;">
-            ❤❤❤❤❤
+          <div v-else>
+            <div class="row justify-center">
+              <div class="col-md-2 q-pa-xs justify-center" v-for="tag in sections">
+                <q-btn style="width: 100%" size="sm" color="pink-4" :to="`/media/${tag.tag}`">{{ tag.label }}</q-btn>
+              </div>
+            </div>
+            <div class="row justify-center q-py-sm" style="color: white; font-size: 30px;">
+              ❤❤❤❤❤
+            </div>
+            <div class="row justify-center q-pb-sm">
+              <q-btn v-for="(char, c) in girlfriends" square padding="xs" flat :to="`/character/${char.char}`">
+                <q-avatar rounded size="60px">
+                  <img :src="char.url" :title="char.name">
+                </q-avatar>
+              </q-btn>
+            </div>
           </div>
-          <div class="row justify-center q-pb-sm">
-            <q-btn v-for="(char, c) in girlfriends" square padding="xs" flat :to="`/character/${char.char}`">
-              <q-avatar rounded size="60px">
-                <img :src="char.url" :title="char.name">
-              </q-avatar>
-            </q-btn>
-          </div>
+
           <q-separator inset color="white" />
           <div class="row q-px-md q-pt-sm justify-center  strokeme">Credits:
           </div>
@@ -51,7 +74,7 @@ import { sections } from 'src/composables/groups'
 import { girlfriends } from 'src/composables/girlfriends'
 import { useRouter } from "vue-router";
 
-
+const modeswitch = ref(0)
 </script>
 <style lang="scss">
 body {
@@ -61,12 +84,17 @@ body {
   align-items: center;
   height: 100vh;
   background-color: #fdf2ea;
-  background-image: url("/bg/ph.png"), url("/bg/ph.png");
+  background-image: url("/bg/ph.png");
   background-size: 75px;
   background-repeat: repeat, repeat;
-  background-position-x: center, 23px;
-  background-position-y: center, 70px;
+  background-position-x: center;
+  background-position-y: center;
 
+}
+
+.q-body--fullscreen-mixin,
+.q-body--prevent-scroll {
+  position: relative !important;
 }
 
 .q-card {

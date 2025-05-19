@@ -1,5 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
+
+
     <q-header elevated>
       <q-toolbar class="bg-pink-5 text-white">
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
@@ -49,7 +51,9 @@
       <div class="row q-px-md justify-center ">ViViHarmonia - Webpage</div>
       <div class="row q-px-md justify-center ">Microphony - Assets</div>
     </q-drawer>
+    <div class="center">
 
+    </div>
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -71,11 +75,12 @@ function toggleLeftDrawer() {
 <style>
 body {
   background-color: #fdf2ea;
-  background-image: url("/bg/ph.png"), url("/bg/ph.png");
-  background-size: 75px;
+  background-image: url("/bg/ph.png");
+  background-size: 5rem;
   background-repeat: repeat, repeat;
-  background-position-x: center, 23px;
-  background-position-y: center, 70px;
+  background-position-x: center;
+  background-position-y: center;
 
 }
+
 </style>

@@ -1,10 +1,10 @@
-const fsPromises = require("fs/promises");
+import fsPromises from "fs/promises"
 
 main();
 async function main() {
   const resultado = [];
   try {
-    const rootpath = "/pics";
+    const rootpath = "public/pics";
     const directorios = await fsPromises.readdir(rootpath);
     for (let directory of directorios) {
       const subdirectorios = await fsPromises.readdir(
