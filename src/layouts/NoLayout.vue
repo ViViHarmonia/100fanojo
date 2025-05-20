@@ -1,10 +1,5 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-
-    <div class="center">
-
-    </div>
-
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -15,21 +10,19 @@ export default {
 
 }
 </script>
-<style lang="">
-.body {
+<style lang="scss">
+body {
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   background-color: #fdf2ea;
-  background-image: url("/bg/ph.png"), url("/bg/ph.png");
+  background-image: url("/bg/ph.png");
   background-size: 75px;
   background-repeat: repeat, repeat;
-  background-position-x: center, 23px;
-  background-position-y: center, 70px;
+  background-position-x: center;
+  background-position-y: center;
 
-}
-
-.center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 </style>
