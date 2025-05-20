@@ -66,14 +66,11 @@
       <q-btn @click="imageMove(2)" icon="arrow_back" class="prev" round></q-btn>
       <q-btn @click="imageMove(1)" icon="arrow_forward" class="next" round></q-btn>
     </div>
-
-
-
   </q-dialog>
 </template>
 <script setup>
 import { onMounted, ref, toRef, watch } from "vue";
-import { sections, subAnimeArts, otherArtists, birthdayStuffs, chibiTypes, dateVersions, merchCollabEvents, promoArts, gameEvents } from 'src/composables/groups'
+import { sections, subAnimeArts, otherArtists, birthdayStuffs, chibiTypes, dateVersions, merchCollabEvents, promoArts, gameEvents, sheetKinds } from 'src/composables/groups'
 import { galeria } from 'src/composables/gallery'
 import { useRoute } from "vue-router";
 
@@ -140,12 +137,10 @@ function subcatChoice(subtag) {
   subfilteredGallery.value = []
   if (Object.keys(subcategory.value).length === 0 || subcategory.value.subtag != subtag) {
     for (var i = 0; i < subcategories.value.length; i++) {
-      console.log("ENTRO AL FOR " + subcategories.value[i].subtag)
       if (subcategories.value[i].subtag == subtag) {
         subcategory.value = subcategories.value[i]
       }
     }
-    console.log(subcategory.value)
     for (var i = 0; i < filteredGallery.value.length; i++) {
       if (filteredGallery.value[i].subsct == subcategory.value.subtag) {
         subfilteredGallery.value.push(filteredGallery.value[i])
@@ -183,6 +178,9 @@ function subsectionSwitch() {
       break
     case "game":
       subcategories.value = gameEvents
+      break
+    case "sheet":
+      subcategories.value = sheetKinds
       break
   }
   if (subcategories.value.length == 0) {

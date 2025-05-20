@@ -101,4 +101,9 @@ export const gameEvents = [
   { label: "MC Sprites (Cheerleader Event)", subtag: "cheer", desc: "" },
   { label: "Side Char. Sprites", subtag: "extras", desc: "" },
 ]
+export const sheetKinds = [
+  { label: "Concepts/Sheets", subtag: "char", desc: "" },
+  { label: "Chibi+Side Chars.", subtag: "extra", desc: "" },
+  { label: "Chapter Outfits", subtag: "outfits", desc: "" },
+]
 
