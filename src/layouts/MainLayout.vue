@@ -31,7 +31,9 @@
       <q-scroll-area style="height: 500px; max-width: 300px;" v-if="search == 1">
         <div class="q-py-xs">
           <div class="row justify-center q-pa-xs" v-for="tag in sections">
-            <q-btn style="width: 90%" color="pink-4" :to="`/media/${tag.tag}`">{{ tag.label }}</q-btn>
+            <q-btn style="width: 90%" :color="route.params.category == tag.tag ? 'white' : 'pink-4'"
+              :text-color="route.params.category == tag.tag ? 'pink-4' : 'white'" :to="`/media/${tag.tag}`">{{ tag.label
+              }}</q-btn>
           </div>
         </div>
       </q-scroll-area>
@@ -64,6 +66,8 @@
 import { ref } from 'vue'
 import { sections } from 'src/composables/groups'
 import { girlfriends } from 'src/composables/girlfriends'
+import { useRoute } from 'vue-router'
+const route = useRoute()
 const search = ref(1)
 
 const leftDrawerOpen = ref(false)
@@ -82,5 +86,4 @@ body {
   background-position-y: center;
 
 }
-
 </style>
