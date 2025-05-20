@@ -37,7 +37,7 @@ export const girlfriends = [
     name: "Yakuzen Kusuri",
   },
   {
-    url: "/big headshots/HeadshotHakari.png",
+    url: "/big headshots/HeadshotHahari.png",
     num: "6",
     char: "haha",
     name: "Hanazono Hahari",

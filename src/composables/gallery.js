@@ -717,7 +717,7 @@ export const galeria = [
     label: "Hahari - May 12",
     sect: "bday",
     subsct: "icon",
-    chars: ["Haha"],
+    chars: ["haha"],
   },
   {
     url: "pics/bday/icon/UtoBday.jpg",

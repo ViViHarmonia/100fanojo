@@ -1,14 +1,62 @@
 <template>
   <div class="center">
-    <div class="row q-pa-xs items align-center justify-center">
-      <div v-for="image in filteredGallery">
-        <div class="col-auto image q-pa-xs">
-          <img :src="image.url" style="max-height: 200px;">
-          <div class="caption" v-if="image.label != ''"><span>{{ image.label
-              }}</span></div>
-          <q-btn class="open" dense round icon="fullscreen" size="sm" @click="openImage(image)"></q-btn>
+    <div class="row q-pa-xs items-center align-center justify-center" v-if="filteredSections.length > 1">
+      <div class="col-xs-auto q-pa-xs" v-for="cat in filteredSections">
+        <q-btn :color="categorychosen.tag == cat.tag ? 'white' : 'pink-4'"
+          :text-color="categorychosen.tag == cat.tag ? 'pink-4' : 'white'" @click="catChoice(cat.tag)">{{
+            cat.label }}</q-btn>
+      </div>
+    </div>
+    <div v-if="filteredSections.length > 0 && Object.keys(categorychosen).length === 0">
+      <div v-for="sect in filteredSections">
+        <div class="col-xs-12">
+          <div class="row items-center align-center justify-center text-h5 q-py-md"
+            style="background-color: #ff86a8aa;">{{ sect.label }}</div>
+          <div class="row items-center align-center justify-center text-body1 q-pa-sm" v-if="sect.desc != ''"
+            style="background-color: #ff86a8cc;">{{ sect.desc
+            }}</div>
+          <div class="row q-pa-xs items-center align-center justify-center">
+            <div v-for="image in filteredGallery">
+              <div class="col-auto image q-pa-xs" v-if="image.sect == sect.tag">
+                <img :src="image.url" style="max-height: 200px;">
+                <div class="caption" v-if="image.label != ''"><span>{{ image.label }}</span></div>
+                <q-btn class="open" dense round icon="fullscreen" size="sm" @click="openImage(image)"></q-btn>
+                <div class="row align-center justify-center" v-if="image.subsct != 'NONE'"
+                  style="background-color: #ff86a8;">{{ returnSubSectName(image.sect, image.subsct) }}</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+    <div v-else-if="filteredSections.length > 0 && Object.keys(categorychosen).length > 0">
+      <div class="row items-center align-center justify-center text-body1 q-pa-sm" v-if="categorychosen.desc != ''"
+        style="background-color: #ff86a8cc;">{{ categorychosen.desc }}</div>
+      <div class="row q-pa-xs items align-center justify-center">
+        <div v-for="image in subfilteredGallery">
+          <div class="col-auto image q-pa-xs">
+            <img :src="image.url" style="max-height: 200px;">
+            <div class="caption" v-if="image.label != ''"><span>{{ image.label
+                }}</span></div>
+            <q-btn class="open" dense round icon="fullscreen" size="sm" @click="openImage(image)"></q-btn>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      <div class="row q-pa-xs items align-center justify-center">
+        <div v-for="image in filteredGallery">
+          <div class="col-auto image q-pa-xs">
+            <img :src="image.url" style="max-height: 200px;">
+            <div class="caption" v-if="image.label != ''"><span>{{ image.label
+                }}</span></div>
+            <q-btn class="open" dense round icon="fullscreen" size="sm" @click="openImage(image)"></q-btn>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row q-pa-xs items align-center justify-center">
+
     </div>
   </div>
   <q-dialog v-model="fullscreenImageDialog" maximized @keyup.left="imageMove(2)" @keyup.right="imageMove(1)"
@@ -26,6 +74,7 @@
 <script setup>
 import { onMounted, ref, toRef, watch } from "vue";
 import { sections } from 'src/composables/groups'
+import { subAnimeArts, otherArtists, birthdayStuffs, chibiTypes, dateVersions, merchCollabEvents, promoArts, gameEvents, sheetKinds } from 'src/composables/groups'
 import { girlfriends } from 'src/composables/girlfriends'
 import { galeria } from 'src/composables/gallery'
 import { useRoute } from "vue-router";
@@ -47,7 +96,63 @@ watch(
     data()
   }
 )
-
+function returnSubSectName(section, subtag) {
+  var subcategories
+  console.log(subtag)
+  console.log(section)
+  switch (section) {
+    case "anime":
+      subcategories = subAnimeArts
+      break
+    case "other":
+      subcategories = otherArtists
+      break
+    case "bday":
+      subcategories = birthdayStuffs
+      break
+    case "chibi":
+      subcategories = chibiTypes
+      break
+    case "date":
+      subcategories = dateVersions
+      break
+    case "colab":
+      subcategories = merchCollabEvents
+      break
+    case "promo":
+      subcategories = promoArts
+      break
+    case "game":
+      subcategories = gameEvents
+      break
+    case "sheet":
+      subcategories = sheetKinds
+      break
+  }
+  for (let subcat of subcategories) {
+    if (subcat.subtag == subtag) {
+      return subcat.label
+    }
+  }
+}
+function catChoice(tag) {
+  subfilteredGallery.value = []
+  if (Object.keys(categorychosen.value).length === 0 || categorychosen.value.tag != tag) {
+    for (var i = 0; i < filteredSections.value.length; i++) {
+      if (filteredSections.value[i].tag == tag) {
+        categorychosen.value = filteredSections.value[i]
+      }
+    }
+    for (var i = 0; i < filteredGallery.value.length; i++) {
+      if (filteredGallery.value[i].sect == categorychosen.value.tag) {
+        subfilteredGallery.value.push(filteredGallery.value[i])
+      }
+    }
+  } else {
+    categorychosen.value = {}
+    subfilteredGallery.value = []
+  }
+}
 function openImage(image) {
   fullscreenImage.value = image;
   fullscreenImageDialog.value = true
@@ -81,15 +186,15 @@ function imageMove(direction) {
       } break
   }
 }
-function data() {
+async function data() {
   var charcode = route.params.characterid
-  console.log(charcode)
   for (let gorl of girlfriends) {
     if (gorl.char == charcode) {
       characterchosen.value = gorl
     }
   }
-  filterGallery()
+  await filterGallery()
+  sectionFilter()
 }
 function filterGallery() {
   filteredGallery.value = []
@@ -100,6 +205,17 @@ function filterGallery() {
       }
     }
 
+  }
+}
+function sectionFilter() {
+  filteredSections.value = []
+  for (let sect of sections) {
+    for (let img of filteredGallery.value) {
+      if (img.sect == sect.tag) {
+        filteredSections.value.push(sect)
+        break
+      }
+    }
   }
 }
 onMounted(() => {
