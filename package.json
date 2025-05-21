@@ -1,8 +1,8 @@
 {
   "name": "100kanojo",
   "version": "0.0.1",
-  "description": "Fan-made organic Wiki for 100 Girlfriends media",
-  "productName": "Fanojo Wiki",
+  "description": "Fan-made organic Gallery for 100 Girlfriends media",
+  "productName": "Fanojo Gallery",
   "author": "vivi64",
   "type": "module",
   "private": true,
