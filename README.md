@@ -1,6 +1,6 @@
-# Fanojo Wiki (100kanojo)
+# Fanojo Gallery (100kanojo)
 
-Fan-made organic Wiki for 100 Girlfriends media
+Fan-made Gallery for 100 Girlfriends media
 
 ## Install the dependencies
 ```bash
