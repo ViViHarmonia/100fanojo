@@ -4592,6 +4592,13 @@ export const galeria = [
     chars: ["haha","mei"],
   },
   {
+    url: "pics/other/yano/yano-akanes-illustration-of-the-figurines-v0-u5v2dm8a735c1.png",
+    label: "",
+    sect: "other",
+    subsct: "yano",
+    chars: ["haka","kara"],
+  },
+  {
     url: "pics/other/yano/332cbffd3a5d252d649928d16998e4cb.jpeg",
     label: "",
     sect: "other",
@@ -4948,7 +4955,7 @@ export const galeria = [
     subsct: "NONE",
     chars: ["ren", "kusu"],
   },
-  {
+  /*{
     url: "pics/promo/bluray/1hakariA.jpeg",
     label: "",
     sect: "promo",
@@ -4971,6 +4978,20 @@ export const galeria = [
   },
   {
     url: "pics/promo/bluray/2karaneB.jpeg",
+    label: "",
+    sect: "promo",
+    subsct: "bluray",
+    chars: ["kara"],
+  },*/
+  {
+    url: "pics/promo/bluray/MED-DVD2-55571.png",
+    label: "",
+    sect: "promo",
+    subsct: "bluray",
+    chars: ["haka"],
+  },
+  {
+    url: "pics/promo/bluray/MED-DVD2-55572.png",
     label: "",
     sect: "promo",
     subsct: "bluray",
@@ -5010,6 +5031,62 @@ export const galeria = [
     sect: "promo",
     subsct: "bluray",
     chars: ["kuru"],
+  },
+  {
+    url: "pics/promo/bluray/MED-DVD2-58214.png",
+    label: "",
+    sect: "promo",
+    subsct: "bluray",
+    chars: ["mei"],
+  },
+  {
+    url: "pics/promo/bluray/c9ozswrhretc1.png",
+    label: "Blu-Ray Comic Cover",
+    sect: "promo",
+    subsct: "bluray",
+    chars: [""],
+  },
+  {
+    url: "pics/promo/bluray/d4pmwrciretc1.png",
+    label: "Blu-Ray Comic Page 1",
+    sect: "promo",
+    subsct: "bluray",
+    chars: [""],
+  },
+  {
+    url: "pics/promo/bluray/gfawkfgiretc1.png",
+    label: "Blu-Ray Comic Page 2",
+    sect: "promo",
+    subsct: "bluray",
+    chars: [""],
+  },
+  {
+    url: "pics/promo/bluray/y91n6goiretc1.png",
+    label: "Blu-Ray Comic Page 3",
+    sect: "promo",
+    subsct: "bluray",
+    chars: [""],
+  },
+  {
+    url: "pics/promo/bluray/c38ombtiretc1.png",
+    label: "Blu-Ray Comic Page 4",
+    sect: "promo",
+    subsct: "bluray",
+    chars: [""],
+  },
+  {
+    url: "pics/promo/bluray/jqjoo30jretc1.png",
+    label: "Blu-Ray Comic Page 5",
+    sect: "promo",
+    subsct: "bluray",
+    chars: [""],
+  },
+  {
+    url: "pics/promo/bluray/fxgm3t4jretc1.png",
+    label: "Blu-Ray Comic Page 6",
+    sect: "promo",
+    subsct: "bluray",
+    chars: [""],
   },
   {
     url: "pics/promo/coaster/front.png",
@@ -5737,6 +5814,13 @@ export const galeria = [
     chars: ["hasu"],
   },
   {
+    url: "pics/sheet/char/xxb3pp9sqzxe1.png",
+    label: "Kimari Sheet",
+    sect: "sheet",
+    subsct: "char",
+    chars: ["mari"],
+  },
+  {
     url: "pics/sheet/extra/dec16e4fad68877acd6ff91e9778ec1a.jpeg",
     label: "Jurassic Profiles",
     sect: "sheet",
@@ -5821,6 +5905,20 @@ export const galeria = [
     chars: ["ren","haka","kara","shizu","nano","kusu","haha","kuru","mei","iku","mimi","meme","chiyo","naddy","yama","momi","yaku","kishi","ahko","uto","mai","moha","rin","su","eira","tama","kiki","matsu","usa","meru"],
   },
   {
+    url: "pics/sketch/a852c04e39afab4cf0be8f413964df85.jpeg",
+    label: "",
+    sect: "sketch",
+    subsct: "NONE",
+    chars: ["mei", "mai"],
+  },
+  {
+    url: "pics/sketch/a38e3b7d61a660f06cb9270b5805dd6d.jpeg",
+    label: "",
+    sect: "sketch",
+    subsct: "NONE",
+    chars: ["mai"],
+  },
+  {
     url: "pics/sketch/1d7d29ca2d96c783c647be28759a25b7.jpeg",
     label: "",
     sect: "sketch",
@@ -5865,13 +5963,6 @@ export const galeria = [
     chars: ["ren", "haka", "kara", "shizu", "nano", "kusu"],
   },
   {
-    url: "pics/sketch/a38e3b7d61a660f06cb9270b5805dd6d.jpeg",
-    label: "",
-    sect: "sketch",
-    subsct: "NONE",
-    chars: ["mai"],
-  },
-  {
     url: "pics/sketch/a5a60e6d3ece2218b42c1af648109883.jpeg",
     label: "",
     sect: "sketch",
@@ -5896,13 +5987,6 @@ export const galeria = [
       "yaku",
       "kishi",
     ],
-  },
-  {
-    url: "pics/sketch/a852c04e39afab4cf0be8f413964df85.jpeg",
-    label: "",
-    sect: "sketch",
-    subsct: "NONE",
-    chars: ["mei", "mai"],
   },
   {
     url: "pics/sketch/ac13498829a1dee1f3ee560d6a4c279c.jpeg",
