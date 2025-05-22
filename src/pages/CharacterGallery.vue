@@ -53,7 +53,7 @@
           <div class="col-auto image q-pa-xs">
             <img :src="image.url" style="max-height: 200px;">
             <div class="caption" v-if="image.label != ''"><span>{{ image.label
-                }}</span></div>
+            }}</span></div>
             <q-btn class="open" dense round icon="fullscreen" size="sm" @click="openImage(image)"></q-btn>
             <div v-if="image.subsct != 'NONE'" class="undercap"><span>{{ returnSubSectName(image.sect,
               image.subsct) }}</span>
@@ -67,7 +67,7 @@
         <div class="col-auto image q-pa-xs">
           <img :src="image.url" style="max-height: 200px;">
           <div class="caption" v-if="image.label != ''"><span>{{ image.label
-              }}</span></div>
+          }}</span></div>
           <q-btn class="open" dense round icon="fullscreen" size="sm" @click="openImage(image)"></q-btn>
         </div>
       </div>
@@ -181,12 +181,12 @@ function openImage(image) {
 }
 function imageMove(direction) {
   var tempSpace
-  var tempGallery = filteredGallery.value
-  /*if (subfilteredGallery.value.length > 0) {
+  var tempGallery
+  if (subfilteredGallery.value.length > 0) {
     tempGallery = subfilteredGallery.value
   } else {
     tempGallery = filteredGallery.value
-  }*/
+  }
   for (var i = 0; i < tempGallery.length; i++) {
     if (tempGallery[i].url == fullscreenImage.value.url) {
       tempSpace = i
