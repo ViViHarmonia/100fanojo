@@ -290,7 +290,7 @@ export const galeria = [
     label: "",
     sect: "b&w",
     subsct: "NONE",
-    chars: ["ren", "haha"],
+    chars: ["ren", "mei"],
   },
   {
     url: "pics/b&w/0a3a42c3d9010e9aa17e02983fb6b729.jpeg",
