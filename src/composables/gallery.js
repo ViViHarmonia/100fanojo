@@ -5499,18 +5499,18 @@ export const galeria = [
     chars: ["iku"],
   },
   {
-    url: "pics/promo/anipromo/meme.jpeg",
-    label: "",
-    sect: "promo",
-    subsct: "anipromo",
-    chars: ["meme"],
-  },
-  {
     url: "pics/promo/anipromo/mimimi.jpeg",
     label: "",
     sect: "promo",
     subsct: "anipromo",
     chars: ["mimi"],
+  },
+  {
+    url: "pics/promo/anipromo/meme.jpeg",
+    label: "",
+    sect: "promo",
+    subsct: "anipromo",
+    chars: ["meme"],
   },
   {
     url: "pics/promo/sample/7efd57e7410827195bc3e2bc22479725.jpeg",
