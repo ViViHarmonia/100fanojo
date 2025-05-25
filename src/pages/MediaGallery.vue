@@ -2,17 +2,20 @@
   <div class="centerGallery">
     <div v-if="subcategories.length > 1">
       <div class="row q-pa-xs items-center align-center justify-center" v-if="$q.screen.gt.sm">
-        <div class="col-xs-auto q-pa-xs" v-for="subcat in subcategories">
-          <q-btn :color="subcategory.subtag == subcat.subtag ? 'white' : 'pink-4'"
-            :text-color="subcategory.subtag == subcat.subtag ? 'pink-4' : 'white'"
-            @click="subcatChoice(subcat.subtag)">{{
-              subcat.label }}</q-btn>
+        <div v-for="subcat in subcategories">
+          <div class="col-xs-auto q-pa-xs" v-if="subcat.subtag != 'NONE'">
+            <q-btn :color="subcategory.subtag == subcat.subtag ? 'white' : 'pink-4'"
+              :text-color="subcategory.subtag == subcat.subtag ? 'pink-4' : 'white'"
+              @click="subcatChoice(subcat.subtag)">{{
+                subcat.label }}</q-btn>
+          </div>
         </div>
+
       </div>
       <div class="row q-pa-xs align-center justify-center" v-else style="width: 100%;">
         <div class="col-xs-12 q-pa-xs">
           <q-select bg-color="pink-4" color="white" dark filled v-model="subcategory" :options="subcategories"
-            option-label="label" dense option-value="subtag" @update:model-value="subCatChoiceSimp()"
+            option-label="label" dense option-value="subtag" @update:model-value="filterGallery()"
             style="width: 100%;"></q-select>
         </div>
       </div>
@@ -24,7 +27,7 @@
       class="row q-pa-xs items-center align-center justify-center"
       style="flex-direction: column !important; flex-wrap: nowrap !important ;width: 100%;">
       <div v-for="sub in subcategories" style="width: 100%;">
-        <div class="col-xs-12">
+        <div class="col-xs-12" v-if="sub.subtag != 'NONE'">
           <div class="row items-center align-center justify-center text-h5 q-py-md"
             style="background-color: #ff86a8aa;">{{ sub.label }}</div>
           <div class="row items-center align-center justify-center text-body1 q-pa-sm" v-if="sub.desc != ''"
@@ -48,11 +51,11 @@
       <div class="row items-center align-center justify-center text-body1 q-pa-sm" v-if="subcategory.desc != ''"
         style="background-color: #ff86a8cc;">{{ subcategory.desc }}</div>
       <div class="row q-pa-xs items-center align-center justify-center">
-        <div v-for="image in subfilteredGallery">
+        <div v-for="image in filteredGallery">
           <div class="col-auto image q-pa-xs">
             <img :src="image.url" style="max-height: 200px;">
             <div class="caption" v-if="image.label != ''"><span>{{ image.label
-                }}</span></div>
+            }}</span></div>
             <q-btn class="open" dense round icon="fullscreen" size="sm" @click="openImage(image)"></q-btn>
           </div>
         </div>
@@ -81,6 +84,7 @@
       <q-btn @click="imageMove(1)" icon="arrow_forward" class="next" round></q-btn>
     </div>
   </q-dialog>
+
 </template>
 <script setup>
 import { onMounted, ref, toRef, watch } from "vue";
@@ -96,9 +100,10 @@ const fullscreenImageDialog = ref(false)
 const categorychosen = ref({})
 const subcategories = ref([])
 
-const subcategory = ref({ label: "Select", subtag: "NONE" })
+const subcategory = ref({ label: "ALL", subtag: "NONE" })
 const filteredGallery = ref([])
 const subfilteredGallery = ref([])
+const slide = ref(1)
 const $q = useQuasar()
 watch(
   () => route.params.category,
@@ -112,12 +117,8 @@ function openImage(image) {
 }
 function imageMove(direction) {
   var tempSpace
-  var tempGallery
-  if (subfilteredGallery.value.length > 0) {
-    tempGallery = subfilteredGallery.value
-  } else {
-    tempGallery = filteredGallery.value
-  }
+  var tempGallery = filteredGallery.value
+
   for (var i = 0; i < tempGallery.length; i++) {
     if (tempGallery[i].url == fullscreenImage.value.url) {
       tempSpace = i
@@ -147,7 +148,6 @@ async function data() {
     }
   }
   subsectionSwitch()
-  filterGallery()
 }
 function subcatChoice(subtag) {
   subfilteredGallery.value = []
@@ -157,27 +157,15 @@ function subcatChoice(subtag) {
         subcategory.value = subcategories.value[i]
       }
     }
-    for (var i = 0; i < filteredGallery.value.length; i++) {
-      if (filteredGallery.value[i].subsct == subcategory.value.subtag) {
-        subfilteredGallery.value.push(filteredGallery.value[i])
-      }
-    }
+
   } else {
-    subcategory.value = { label: "Select", subtag: "NONE" }
-    subfilteredGallery.value = []
+    subcategory.value = { label: "ALL", subtag: "NONE" }
   }
-}
-function subCatChoiceSimp() {
-  subfilteredGallery.value = []
-  for (var i = 0; i < filteredGallery.value.length; i++) {
-    if (filteredGallery.value[i].subsct == subcategory.value.subtag) {
-      subfilteredGallery.value.push(filteredGallery.value[i])
-    }
-  }
+  filterGallery()
 }
 function subsectionSwitch() {
   subcategories.value = []
-  subcategory.value = { label: "Select", subtag: "NONE" }
+  subcategory.value = { label: "ALL", subtag: "NONE" }
   switch (categorychosen.value.tag) {
     case "anime":
       subcategories.value = subAnimeArts
@@ -208,16 +196,40 @@ function subsectionSwitch() {
       break
   }
   if (subcategories.value.length == 0) {
-    subcategory.value = { label: "Select", subtag: "NONE" }
+    subcategory.value = { label: "ALL", subtag: "NONE" }
+  } else {
+    subcategories.value.splice(0, 0, { label: "ALL", subtag: "NONE" })
   }
+  filterGallery()
 
 }
 function filterGallery() {
   filteredGallery.value = []
+  let tempGallery = []
   for (var i = 0; i < galeria.length; i++) {
     if (galeria[i].sect == categorychosen.value.tag) {
-      filteredGallery.value.push(galeria[i])
+      tempGallery.push(galeria[i])
     }
+  }
+  if (subcategories.value.length > 0 && subcategory.value.subtag != 'NONE') {
+    for (var i = 0; i < tempGallery.length; i++) {
+      if (tempGallery[i].subsct == subcategory.value.subtag) {
+        filteredGallery.value.push(tempGallery[i])
+      }
+    }
+    console.log("entro al if")
+  } else if (subcategories.value.length > 0 && subcategory.value.subtag == 'NONE') {
+    for (var i = 0; i < subcategories.value.length; i++) {
+      for (var j = 0; j < tempGallery.length; j++) {
+        if (subcategories.value[i].subtag == tempGallery[j].subsct) {
+          filteredGallery.value.push(tempGallery[j])
+        }
+      }
+    }
+    console.log("entro al else if")
+  } else {
+    filteredGallery.value = tempGallery
+    console.log("entro al else")
   }
 }
 onMounted(() => {
@@ -274,7 +286,7 @@ img {
   left: 16px;
   top: 16px;
   opacity: 0;
-  background-color: #ff5683;
+  background-color: #ff5683aa;
   color: white;
 }
 
@@ -291,7 +303,7 @@ img {
   position: absolute;
   top: 16px;
   left: 16px;
-  background-color: #ff5683;
+  background-color: #ff5683aa;
   color: white;
 }
 
@@ -299,7 +311,7 @@ img {
   position: absolute;
   left: 12px;
   bottom: 2px;
-  background-color: #ff5683;
+  background-color: #ff5683aa;
   color: white;
 }
 
@@ -307,7 +319,7 @@ img {
   position: absolute;
   right: 12px;
   bottom: 2px;
-  background-color: #ff5683;
+  background-color: #ff5683aa;
   color: white;
 }
 

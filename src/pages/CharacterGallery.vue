@@ -2,16 +2,19 @@
   <div class="centerGallery">
     <div v-if="filteredSections.length > 1">
       <div class="row q-pa-xs items-center align-center justify-center" v-if="$q.screen.gt.sm">
-        <div class="col-xs-auto q-pa-xs" v-for="cat in filteredSections">
-          <q-btn :color="categorychosen.tag == cat.tag ? 'white' : 'pink-4'"
-            :text-color="categorychosen.tag == cat.tag ? 'pink-4' : 'white'" @click="catChoice(cat.tag)">{{
-              cat.label }}</q-btn>
+        <div v-for="cat in filteredSections">
+          <div class="col-xs-auto q-pa-xs" v-if="cat.tag != 'NONE'">
+            <q-btn :color="categorychosen.tag == cat.tag ? 'white' : 'pink-4'"
+              :text-color="categorychosen.tag == cat.tag ? 'pink-4' : 'white'" @click="catChoice(cat.tag)">{{
+                cat.label }}</q-btn>
+          </div>
         </div>
+
       </div>
       <div class="row q-pa-xs align-center justify-center" v-else style="width: 100%;">
         <div class="col-xs-12 q-pa-xs">
           <q-select bg-color="pink-4" color="white" dark filled v-model="categorychosen" :options="filteredSections"
-            option-label="label" option-value="tag" @update:model-value="catChoiceSimp()" style="width: 100%;"
+            option-label="label" option-value="tag" @update:model-value="filterGallery()" style="width: 100%;"
             dense></q-select>
         </div>
       </div>
@@ -21,7 +24,7 @@
       class="row q-pa-xs items-center align-center justify-center"
       style="flex-direction: column !important; flex-wrap: nowrap !important ; width: 100%;">
       <div v-for="sect in filteredSections" style="width: 100%;">
-        <div class="col-xs-12">
+        <div class="col-xs-12" v-if="sect.tag != 'NONE'">
           <div class="row items-center align-center justify-center text-h5 q-py-md"
             style="background-color: #ff86a8aa;">{{ sect.label }}</div>
           <div class="row items-center align-center justify-center text-body1 q-pa-sm" v-if="sect.desc != ''"
@@ -49,7 +52,7 @@
         style="background-color: #ff86a8cc;">{{ categorychosen.desc }}
       </div>
       <div class="row q-pa-xs align-center justify-center">
-        <div v-for="image in subfilteredGallery">
+        <div v-for="image in filteredGallery">
           <div class="col-auto image q-pa-xs">
             <img :src="image.url" style="max-height: 200px;">
             <div class="caption" v-if="image.label != ''"><span>{{ image.label
@@ -77,7 +80,7 @@
     @keyup.x="fullscreenImageDialog = false">
     <div style="width: 100%; display: flex; align-items: center; justify-content: center; position: relative;">
       <q-img :src="fullscreenImage.url" style="width: 100%; max-height: 100%; object-fit: cover" fit="contain" />
-      <div class="captionFull">{{ fullscreenImage.label }}</div>
+      <div class="captionFull" v-if="fullscreenImage.label != ''">{{ fullscreenImage.label }}</div>
       <q-btn @click="fullscreenImage = {}; fullscreenImageDialog = false" icon="close" class="close"
         padding="none"></q-btn>
       <q-btn @click="imageMove(2)" icon="arrow_back" class="prev" round></q-btn>
@@ -98,9 +101,8 @@ const route = useRoute()
 
 const fullscreenImage = ref("")
 const fullscreenImageDialog = ref(false)
-const categorychosen = ref({ label: "Select", tag: "NONE" })
+const categorychosen = ref({ label: "ALL", tag: "NONE" })
 const filteredGallery = ref([])
-const subfilteredGallery = ref([])
 const filteredSections = ref([])
 
 const characterchosen = ref({})
@@ -150,30 +152,17 @@ function returnSubSectName(section, subtag) {
   }
 }
 function catChoice(tag) {
-  subfilteredGallery.value = []
+  filteredGallery.value = []
   if (categorychosen.value.tag == 'NONE' || categorychosen.value.tag != tag) {
     for (var i = 0; i < filteredSections.value.length; i++) {
       if (filteredSections.value[i].tag == tag) {
         categorychosen.value = filteredSections.value[i]
       }
     }
-    for (var i = 0; i < filteredGallery.value.length; i++) {
-      if (filteredGallery.value[i].sect == categorychosen.value.tag) {
-        subfilteredGallery.value.push(filteredGallery.value[i])
-      }
-    }
   } else {
-    categorychosen.value = { label: "Select", tag: "NONE" }
-    subfilteredGallery.value = []
+    categorychosen.value = { label: "ALL", tag: "NONE" }
   }
-}
-function catChoiceSimp() {
-  subfilteredGallery.value = []
-  for (var i = 0; i < filteredGallery.value.length; i++) {
-    if (filteredGallery.value[i].sect == categorychosen.value.tag) {
-      subfilteredGallery.value.push(filteredGallery.value[i])
-    }
-  }
+  filterGallery()
 }
 function openImage(image) {
   fullscreenImage.value = image;
@@ -181,12 +170,8 @@ function openImage(image) {
 }
 function imageMove(direction) {
   var tempSpace
-  var tempGallery
-  if (subfilteredGallery.value.length > 0) {
-    tempGallery = subfilteredGallery.value
-  } else {
-    tempGallery = filteredGallery.value
-  }
+  var tempGallery = filteredGallery.value
+
   for (var i = 0; i < tempGallery.length; i++) {
     if (tempGallery[i].url == fullscreenImage.value.url) {
       tempSpace = i
@@ -209,26 +194,49 @@ function imageMove(direction) {
   }
 }
 async function data() {
-  categorychosen.value = { label: "Select", tag: "NONE" }
+  categorychosen.value = {}
   var charcode = route.params.characterid
   for (let gorl of girlfriends) {
     if (gorl.char == charcode) {
       characterchosen.value = gorl
     }
   }
+  categorychosen.value = { label: "ALL", tag: "NONE" }
   filterGallery()
+  sectionFilter()
 }
 function filterGallery() {
   filteredGallery.value = []
+  let tempGallery = []
   for (var i = 0; i < galeria.length; i++) {
     for (var j = 0; j < galeria[i].chars.length; j++) {
       if (galeria[i].chars[j] == characterchosen.value.char) {
-        filteredGallery.value.push(galeria[i])
+        tempGallery.push(galeria[i])
       }
     }
-
   }
-  sectionFilter()
+  console.log(tempGallery)
+  console.log(categorychosen.value)
+  if (sections.length > 0 && categorychosen.value.tag != 'NONE') {
+    for (var i = 0; i < tempGallery.length; i++) {
+      if (tempGallery[i].sect == categorychosen.value.tag) {
+        filteredGallery.value.push(tempGallery[i])
+      }
+    }
+    console.log("entro al if")
+  } else if (sections.length > 0 && categorychosen.value.tag == 'NONE') {
+    for (var i = 0; i < sections.length; i++) {
+      for (var j = 0; j < tempGallery.length; j++) {
+        if (sections[i].tag == tempGallery[j].sect) {
+          filteredGallery.value.push(tempGallery[j])
+        }
+      }
+    }
+    console.log("entro al else if")
+  } else {
+    filteredGallery.value = tempGallery
+    console.log("entro al else")
+  }
 }
 function sectionFilter() {
   filteredSections.value = []
@@ -240,6 +248,8 @@ function sectionFilter() {
       }
     }
   }
+  filteredSections.value.splice(0, 0, { label: "ALL", tag: "NONE" })
+  console.log(filteredSections.value)
 }
 onMounted(() => {
   data()
@@ -306,7 +316,7 @@ img {
   left: 16px;
   top: 16px;
   opacity: 0;
-  background-color: #ff5683;
+  background-color: #ff5683aa;
   color: white;
 }
 
@@ -325,7 +335,7 @@ img {
   transform: translate(-50%, -50%);
   left: 16px;
   top: 16px;
-  background-color: #ff5683;
+  background-color: #ff5683aa;
   color: white;
 }
 
@@ -333,7 +343,7 @@ img {
   position: absolute;
   left: 12px;
   bottom: 2px;
-  background-color: #ff5683;
+  background-color: #ff5683aa;
   color: white;
 }
 
@@ -341,7 +351,7 @@ img {
   position: absolute;
   right: 12px;
   bottom: 2px;
-  background-color: #ff5683;
+  background-color: #ff5683aa;
   color: white;
 }
 
