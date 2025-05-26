@@ -55,7 +55,7 @@
           <div class="col-auto image q-pa-xs">
             <img :src="image.url" style="max-height: 200px;">
             <div class="caption" v-if="image.label != ''"><span>{{ image.label
-            }}</span></div>
+                }}</span></div>
             <q-btn class="open" dense round icon="fullscreen" size="sm" @click="openImage(image)"></q-btn>
           </div>
         </div>
@@ -75,14 +75,31 @@
   </div>
   <q-dialog v-model="fullscreenImageDialog" maximized @keyup.left="imageMove(2)" @keyup.right="imageMove(1)"
     @keyup.x="fullscreenImageDialog = false">
-    <div style="width: 100%; display: flex; align-items: center; justify-content: center; position: relative;">
-      <q-img :src="fullscreenImage.url" style="width: 100%; max-height: 100%; object-fit: cover" fit="contain" />
-      <div class="captionFull" v-if="fullscreenImage.label != ''">{{ fullscreenImage.label }}</div>
-      <q-btn @click="fullscreenImage = {}; fullscreenImageDialog = false" icon="close" class="close"
-        padding="none"></q-btn>
-      <q-btn @click="imageMove(2)" icon="arrow_back" class="prev" round></q-btn>
-      <q-btn @click="imageMove(1)" icon="arrow_forward" class="next" round></q-btn>
-    </div>
+    <q-carousel control-color="pink-4" animated swipeable fullscreen v-model="slide" infinite>
+      <q-carousel-slide v-for="(img, v) in filteredGallery" :name="v" :key="v">
+        <div class="fit" style="width: 100%; display: flex; align-items: center; justify-content: center;">
+          <q-img :src="img.url" style="max-height: 100%" fit="contain" />
+        </div>
+      </q-carousel-slide>
+      <template v-slot:control>
+        <q-carousel-control position="top-right" :offset="[16, 16]" class="text-white rounded-borders"
+          v-if="filteredGallery[slide].label != ''"
+          style="background: rgba(0, 0, 0, .3); padding: 4px 8px; opacity: .8;">
+          <div>{{ filteredGallery[slide].label }}</div>
+        </q-carousel-control>
+        <q-carousel-control position="top-left" :offset="[16, 16]" style="padding: 4px 8px;">
+          <q-btn color="pink-4" @click="fullscreenImageDialog = false" icon="close" padding="xs"
+            style="opacity: .6;"></q-btn>
+        </q-carousel-control>
+        <q-carousel-control position="bottom-left" :offset="[16, 16]" style="padding: 4px 8px;">
+          <q-btn color="pink-4" @click="imageMove(2)" icon="arrow_back" round style="opacity: .6;"></q-btn>
+        </q-carousel-control>
+        <q-carousel-control position="bottom-right" :offset="[16, 16]" style="padding: 4px 8px;">
+          <q-btn color="pink-4" @click="imageMove(1)" icon="arrow_forward" round style="opacity: .6;"></q-btn>
+        </q-carousel-control>
+      </template>
+    </q-carousel>
+
   </q-dialog>
 
 </template>
@@ -95,7 +112,6 @@ import { useQuasar } from 'quasar'
 
 const route = useRoute()
 
-const fullscreenImage = ref("")
 const fullscreenImageDialog = ref(false)
 const categorychosen = ref({})
 const subcategories = ref([])
@@ -103,7 +119,7 @@ const subcategories = ref([])
 const subcategory = ref({ label: "ALL", subtag: "NONE" })
 const filteredGallery = ref([])
 const subfilteredGallery = ref([])
-const slide = ref(1)
+const slide = ref(0)
 const $q = useQuasar()
 watch(
   () => route.params.category,
@@ -111,32 +127,31 @@ watch(
     data()
   }
 )
+
 function openImage(image) {
-  fullscreenImage.value = image;
+  for (var i = 0; i < filteredGallery.value.length; i++) {
+    if (filteredGallery.value[i].url == image.url) {
+      slide.value = i
+    }
+  }
   fullscreenImageDialog.value = true
 }
 function imageMove(direction) {
-  var tempSpace
   var tempGallery = filteredGallery.value
 
-  for (var i = 0; i < tempGallery.length; i++) {
-    if (tempGallery[i].url == fullscreenImage.value.url) {
-      tempSpace = i
-    }
-  }
   switch (direction) {
     case 1:
-      if (tempSpace + 1 > tempGallery.length - 1) {
-        fullscreenImage.value = tempGallery[0]
+      if (slide.value + 1 > tempGallery.length - 1) {
+        slide.value = 0
       } else {
-        fullscreenImage.value = tempGallery[tempSpace + 1]
+        slide.value++
       }
       break
     case 2:
-      if (tempSpace - 1 < 0) {
-        fullscreenImage.value = tempGallery[tempGallery.length - 1]
+      if (slide.value - 1 < 0) {
+        slide.value = tempGallery.length - 1
       } else {
-        fullscreenImage.value = tempGallery[tempSpace - 1]
+        slide.value--
       } break
   }
 }
@@ -290,39 +305,13 @@ img {
   color: white;
 }
 
-.captionFull {
-  color: white;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  padding: 8px 4px 8px 4px;
-  background-color: #000000a9;
+.q-carousel {
+  background-color: #00000000 !important;
 }
 
-.close {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  background-color: #ff5683aa;
-  color: white;
+.q-carousel__slide {
+  padding: 0px !important;
 }
-
-.prev {
-  position: absolute;
-  left: 12px;
-  bottom: 2px;
-  background-color: #ff5683aa;
-  color: white;
-}
-
-.next {
-  position: absolute;
-  right: 12px;
-  bottom: 2px;
-  background-color: #ff5683aa;
-  color: white;
-}
-
 
 .image:hover .caption {
   opacity: 1;
