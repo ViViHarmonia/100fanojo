@@ -19,7 +19,13 @@
     </q-header>
 
     <q-drawer class="bg-pink-3 text-white" v-model="leftDrawerOpen" show-if-above bordered>
-      <div class="row q-px-md q-pt-md text-subtitle1" v-if="$q.screen.lt.sm">100 Kanojo Art Museum</div>
+      <div class="row q-px-md q-pt-sm text-subtitle1 items-center"
+        style="background-color: #FF6196; padding-bottom: 8px;" v-if="$q.screen.lt.sm">
+        <img src="/icons/100gf.png" style="height: 32px; ">
+        <span style="padding-left: 10px;"> Kanojo Art Museum</span>
+        <q-space />
+        <q-btn dense icon="close" color="pink-3" @click="leftDrawerOpen=false"></q-btn>
+      </div>
       <div class="row q-px-md q-pt-md">An attempt to collect all official artwork for 100 Kanojo in one place.
       </div>
       <div class="row q-px-md">Contact: @meidomai on Discord
@@ -96,7 +102,6 @@ watch(
 )
 
 function pageChange() {
-  console.log(Object.keys(route.params))
   if (Object.keys(route.params)[0] == "category") {
     search.value = 1
     var tagcode = route.params.category

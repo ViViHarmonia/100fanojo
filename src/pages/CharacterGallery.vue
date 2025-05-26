@@ -2,16 +2,19 @@
   <div class="centerGallery">
     <div v-if="filteredSections.length > 1">
       <div class="row q-pa-xs items-center align-center justify-center" v-if="$q.screen.gt.sm">
-        <div class="col-xs-auto q-pa-xs" v-for="cat in filteredSections">
-          <q-btn :color="categorychosen.tag == cat.tag ? 'white' : 'pink-4'"
-            :text-color="categorychosen.tag == cat.tag ? 'pink-4' : 'white'" @click="catChoice(cat.tag)">{{
-              cat.label }}</q-btn>
+        <div v-for="cat in filteredSections">
+          <div class="col-xs-auto q-pa-xs" v-if="cat.tag != 'NONE'">
+            <q-btn :color="categorychosen.tag == cat.tag ? 'white' : 'pink-4'"
+              :text-color="categorychosen.tag == cat.tag ? 'pink-4' : 'white'" @click="catChoice(cat.tag)">{{
+                cat.label }}</q-btn>
+          </div>
         </div>
+
       </div>
       <div class="row q-pa-xs align-center justify-center" v-else style="width: 100%;">
         <div class="col-xs-12 q-pa-xs">
           <q-select bg-color="pink-4" color="white" dark filled v-model="categorychosen" :options="filteredSections"
-            option-label="label" option-value="tag" @update:model-value="catChoiceSimp()" style="width: 100%;"
+            option-label="label" option-value="tag" @update:model-value="filterGallery()" style="width: 100%;"
             dense></q-select>
         </div>
       </div>
@@ -21,7 +24,7 @@
       class="row q-pa-xs items-center align-center justify-center"
       style="flex-direction: column !important; flex-wrap: nowrap !important ; width: 100%;">
       <div v-for="sect in filteredSections" style="width: 100%;">
-        <div class="col-xs-12">
+        <div class="col-xs-12" v-if="sect.tag != 'NONE'">
           <div class="row items-center align-center justify-center text-h5 q-py-md"
             style="background-color: #ff86a8aa;">{{ sect.label }}</div>
           <div class="row items-center align-center justify-center text-body1 q-pa-sm" v-if="sect.desc != ''"
@@ -49,7 +52,7 @@
         style="background-color: #ff86a8cc;">{{ categorychosen.desc }}
       </div>
       <div class="row q-pa-xs align-center justify-center">
-        <div v-for="image in subfilteredGallery">
+        <div v-for="image in filteredGallery">
           <div class="col-auto image q-pa-xs">
             <img :src="image.url" style="max-height: 200px;">
             <div class="caption" v-if="image.label != ''"><span>{{ image.label
@@ -75,14 +78,31 @@
   </div>
   <q-dialog v-model="fullscreenImageDialog" maximized @keyup.left="imageMove(2)" @keyup.right="imageMove(1)"
     @keyup.x="fullscreenImageDialog = false">
-    <div style="width: 100%; display: flex; align-items: center; justify-content: center; position: relative;">
-      <q-img :src="fullscreenImage.url" style="width: 100%; max-height: 100%; object-fit: cover" fit="contain" />
-      <div class="captionFull">{{ fullscreenImage.label }}</div>
-      <q-btn @click="fullscreenImage = {}; fullscreenImageDialog = false" icon="close" class="close"
-        padding="none"></q-btn>
-      <q-btn @click="imageMove(2)" icon="arrow_back" class="prev" round></q-btn>
-      <q-btn @click="imageMove(1)" icon="arrow_forward" class="next" round></q-btn>
-    </div>
+    <q-carousel control-color="pink-4" animated swipeable fullscreen v-model="slide" infinite>
+      <q-carousel-slide v-for="(img, v) in filteredGallery" :name="v" :key="v">
+        <div class="fit" style="width: 100%; display: flex; align-items: center; justify-content: center;">
+          <q-img :src="img.url" style="max-height: 100%" fit="contain" />
+        </div>
+      </q-carousel-slide>
+      <template v-slot:control>
+        <q-carousel-control position="top-right" :offset="[16, 16]" class="text-white rounded-borders"
+          v-if="filteredGallery[slide].label != ''"
+          style="background: rgba(0, 0, 0, .3); padding: 4px 8px; opacity: .8;">
+          <div>{{ filteredGallery[slide].label }}</div>
+        </q-carousel-control>
+        <q-carousel-control position="top-left" :offset="[16, 16]" style="padding: 4px 8px;">
+          <q-btn color="pink-4" @click="fullscreenImageDialog = false" icon="close" padding="xs"
+            style="opacity: .6;"></q-btn>
+        </q-carousel-control>
+        <q-carousel-control position="bottom-left" :offset="[16, 16]" style="padding: 4px 8px;">
+          <q-btn color="pink-4" @click="imageMove(2)" icon="arrow_back" round style="opacity: .6;"></q-btn>
+        </q-carousel-control>
+        <q-carousel-control position="bottom-right" :offset="[16, 16]" style="padding: 4px 8px;">
+          <q-btn color="pink-4" @click="imageMove(1)" icon="arrow_forward" round style="opacity: .6;"></q-btn>
+        </q-carousel-control>
+      </template>
+    </q-carousel>
+
   </q-dialog>
 </template>
 <script setup>
@@ -95,12 +115,10 @@ import { useRoute } from "vue-router";
 import { useQuasar } from 'quasar'
 
 const route = useRoute()
-
-const fullscreenImage = ref("")
+const slide = ref(0)
 const fullscreenImageDialog = ref(false)
-const categorychosen = ref({ label: "Select", tag: "NONE" })
+const categorychosen = ref({ label: "ALL", tag: "NONE" })
 const filteredGallery = ref([])
-const subfilteredGallery = ref([])
 const filteredSections = ref([])
 
 const characterchosen = ref({})
@@ -150,85 +168,89 @@ function returnSubSectName(section, subtag) {
   }
 }
 function catChoice(tag) {
-  subfilteredGallery.value = []
+  filteredGallery.value = []
   if (categorychosen.value.tag == 'NONE' || categorychosen.value.tag != tag) {
     for (var i = 0; i < filteredSections.value.length; i++) {
       if (filteredSections.value[i].tag == tag) {
         categorychosen.value = filteredSections.value[i]
       }
     }
-    for (var i = 0; i < filteredGallery.value.length; i++) {
-      if (filteredGallery.value[i].sect == categorychosen.value.tag) {
-        subfilteredGallery.value.push(filteredGallery.value[i])
-      }
-    }
   } else {
-    categorychosen.value = { label: "Select", tag: "NONE" }
-    subfilteredGallery.value = []
+    categorychosen.value = { label: "ALL", tag: "NONE" }
   }
-}
-function catChoiceSimp() {
-  subfilteredGallery.value = []
-  for (var i = 0; i < filteredGallery.value.length; i++) {
-    if (filteredGallery.value[i].sect == categorychosen.value.tag) {
-      subfilteredGallery.value.push(filteredGallery.value[i])
-    }
-  }
+  filterGallery()
 }
 function openImage(image) {
-  fullscreenImage.value = image;
+  for (var i = 0; i < filteredGallery.value.length; i++) {
+    if (filteredGallery.value[i].url == image.url) {
+      slide.value = i
+    }
+  }
   fullscreenImageDialog.value = true
 }
 function imageMove(direction) {
-  var tempSpace
-  var tempGallery
-  if (subfilteredGallery.value.length > 0) {
-    tempGallery = subfilteredGallery.value
-  } else {
-    tempGallery = filteredGallery.value
-  }
-  for (var i = 0; i < tempGallery.length; i++) {
-    if (tempGallery[i].url == fullscreenImage.value.url) {
-      tempSpace = i
-    }
-  }
+  var tempGallery = filteredGallery.value
+
   switch (direction) {
     case 1:
-      if (tempSpace + 1 > tempGallery.length - 1) {
-        fullscreenImage.value = tempGallery[0]
+      if (slide.value + 1 > tempGallery.length - 1) {
+        slide.value = 0
       } else {
-        fullscreenImage.value = tempGallery[tempSpace + 1]
+        slide.value++
       }
       break
     case 2:
-      if (tempSpace - 1 < 0) {
-        fullscreenImage.value = tempGallery[tempGallery.length - 1]
+      if (slide.value - 1 < 0) {
+        slide.value = tempGallery.length - 1
       } else {
-        fullscreenImage.value = tempGallery[tempSpace - 1]
+        slide.value--
       } break
   }
 }
 async function data() {
-  categorychosen.value = { label: "Select", tag: "NONE" }
+  categorychosen.value = {}
   var charcode = route.params.characterid
   for (let gorl of girlfriends) {
     if (gorl.char == charcode) {
       characterchosen.value = gorl
     }
   }
+  categorychosen.value = { label: "ALL", tag: "NONE" }
   filterGallery()
+  sectionFilter()
 }
 function filterGallery() {
   filteredGallery.value = []
+  let tempGallery = []
   for (var i = 0; i < galeria.length; i++) {
     for (var j = 0; j < galeria[i].chars.length; j++) {
       if (galeria[i].chars[j] == characterchosen.value.char) {
-        filteredGallery.value.push(galeria[i])
+        tempGallery.push(galeria[i])
       }
     }
-
   }
-  sectionFilter()
+  console.log(tempGallery)
+  console.log(categorychosen.value)
+  if (sections.length > 0 && categorychosen.value.tag != 'NONE') {
+    for (var i = 0; i < tempGallery.length; i++) {
+      if (tempGallery[i].sect == categorychosen.value.tag) {
+        filteredGallery.value.push(tempGallery[i])
+      }
+    }
+    console.log("entro al if")
+  } else if (sections.length > 0 && categorychosen.value.tag == 'NONE') {
+    for (var i = 0; i < sections.length; i++) {
+      for (var j = 0; j < tempGallery.length; j++) {
+        if (sections[i].tag == tempGallery[j].sect) {
+          filteredGallery.value.push(tempGallery[j])
+        }
+      }
+    }
+    console.log("entro al else if")
+  } else {
+    filteredGallery.value = tempGallery
+    console.log("entro al else")
+  }
 }
 function sectionFilter() {
   filteredSections.value = []
@@ -240,6 +262,8 @@ function sectionFilter() {
       }
     }
   }
+  filteredSections.value.splice(0, 0, { label: "ALL", tag: "NONE" })
+  console.log(filteredSections.value)
 }
 onMounted(() => {
   data()
@@ -306,45 +330,17 @@ img {
   left: 16px;
   top: 16px;
   opacity: 0;
-  background-color: #ff5683;
+  background-color: #ff5683aa;
   color: white;
 }
 
-.captionFull {
-  color: white;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  padding: 8px 4px 8px 4px;
-  background-color: #000000a9;
-  flex-direction: column;
+.q-carousel {
+  background-color: #00000000 !important;
 }
 
-.close {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  left: 16px;
-  top: 16px;
-  background-color: #ff5683;
-  color: white;
+.q-carousel__slide {
+  padding: 0px !important;
 }
-
-.prev {
-  position: absolute;
-  left: 12px;
-  bottom: 2px;
-  background-color: #ff5683;
-  color: white;
-}
-
-.next {
-  position: absolute;
-  right: 12px;
-  bottom: 2px;
-  background-color: #ff5683;
-  color: white;
-}
-
 
 .image:hover .caption {
   opacity: 1;
