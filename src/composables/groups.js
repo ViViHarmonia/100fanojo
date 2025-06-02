@@ -50,6 +50,11 @@ export const otherArtists = [
     desc: "Illustrations from the 100 kanojo x kuso kagaku dokuhan collab",
     subtag: "rikao",
   },
+  {
+    label: "Naoki Nakamura",
+    desc: "???",
+    subtag: "naoki",
+  },
   { label: "Other Artists", desc: "", subtag: "etc" },
 ];
 export const birthdayStuffs = [
