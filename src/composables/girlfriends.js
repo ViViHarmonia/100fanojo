@@ -199,7 +199,7 @@ export const girlfriends = [
     name: "Hasu Hasuha",
   },
   {
-    url: "/big headshots/KimariHeadshotTemp.png",
+    url: "/big headshots/KimariHeadshot.png",
     num: "33",
     char: "mari",
     name: "Morikita Kimari",
