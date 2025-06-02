@@ -52,7 +52,7 @@ export const otherArtists = [
   },
   {
     label: "Naoki Nakamura",
-    desc: "???",
+    desc: "Motion Inspector of Season 1 Episode 5",
     subtag: "naoki",
   },
   { label: "Other Artists", desc: "", subtag: "etc" },

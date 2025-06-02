@@ -3344,6 +3344,13 @@ export const galeria = [
     chars: ["ren", "usa", "meru"],
   },
   {
+    url: "pics/cover/9784088936994.jpg",
+    label: "Volume 22",
+    sect: "cover",
+    subsct: "NONE",
+    chars: ["shizu","kusu","kuru","momi","kishi","ahko","matsu","saki"],
+  },
+  {
     url: "pics/cover/0b8b8c4f4d00d89fd686b36a8328333b.jpeg",
     label: "Light Novel Cover",
     sect: "cover",
